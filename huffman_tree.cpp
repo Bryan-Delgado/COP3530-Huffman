@@ -154,6 +154,5 @@ std::string huffman_tree::decode(const std::string &string_to_decode) const {
 		}
 	}
 
-	cout << "DECODED STRING: " << decodedString << endl;
 	return decodedString;
 }
