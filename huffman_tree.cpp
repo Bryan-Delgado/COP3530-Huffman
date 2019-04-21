@@ -60,7 +60,7 @@ huffman_tree::huffman_tree(const std::string &file_name){
 		pq.pop();
 
 		Node* newTree = new Node;
-		newTree->chr = NULL;
+		newTree->chr = 'NULL';
 		newTree->freq = temp1->freq + temp2->freq;
 		newTree->left = temp1;
 		newTree->right = temp2;
@@ -161,6 +161,5 @@ std::string huffman_tree::decode(const std::string &string_to_decode) const {
 			tempNode = tempNode->left;
 		}
 	}
-	cout << "COMMENTS HAVE BEEN ADDED AND NOTHING WAS BROKEN" << endl;
 	return decodedString;
 }
