@@ -9,7 +9,8 @@
 #include <queue>
 using namespace std;
 
-
+//This method recursively traverses the Huffman tree
+//to add the character codes to an unordered map
 void codeMap(Node* node, string code, map<char, string>* codes){
 	if (node->isLeaf()) {
 		if (code == "") {
@@ -40,8 +41,10 @@ huffman_tree::huffman_tree(const std::string &file_name){
 	}
 	inFile.close();
 
+	//Initializing priority queue for huffman tree creation
 	priority_queue<Node*, vector<Node*>, Compare> pq;
 	
+	//Creates each leaf node from map data and adds to priority queue.
 	for (pair<char, int> element : freqs) {
 		Node* tempNode = new Node;
 		tempNode->chr = element.first;
@@ -49,6 +52,7 @@ huffman_tree::huffman_tree(const std::string &file_name){
 		pq.push(tempNode);
 	}
 
+	//Algorithm for creating Huffman tree
 	while (pq.size() > 1) {
 		Node* temp1 = pq.top();
 		pq.pop();
@@ -63,6 +67,8 @@ huffman_tree::huffman_tree(const std::string &file_name){
 		pq.push(newTree);
 	}
 	
+	//Calls recursive method to find the character
+	//codes through traversing the tree
 	this->root = pq.top();
 	codesPointer = &codes;
 	codeMap(this->root, "", codesPointer);
@@ -79,11 +85,9 @@ Postconditions: Returns the Huffman code for character if character is in the tr
 				and an empty string otherwise.
 */
 std::string huffman_tree::get_character_code(char character) const {
-	
+	//Searches for character code in the map previously created
 	for (pair<char, string> elem : codes) {
-		if (elem.first == character) {
-			return elem.second;
-		}
+		if (elem.first == character) { return elem.second; }
 	}
 	return "";
 }
@@ -101,6 +105,10 @@ std::string huffman_tree::encode(const std::string &file_name) const {
 	bool valid;
 	fstream inFile(file_name, fstream::in);
 
+	//Creates encoded string by reading through file
+	//character by character replacing with code.
+	//If an invalid character is read, valid will remain
+	//false and an empty string will be returned.
 	while (inFile >> noskipws >> chr) {
 		valid = false;
 		for (pair<char, string> elem : codes) {
@@ -109,13 +117,9 @@ std::string huffman_tree::encode(const std::string &file_name) const {
 				valid = true;
 			}
 		}
-		if (valid == false) {
-			return "";
-		}
+		if (valid == false) { return "";}
 	}
-
 	inFile.close();
-
 	return encoded;
 }
 
@@ -131,7 +135,8 @@ std::string huffman_tree::decode(const std::string &string_to_decode) const {
 	string decodedString = "";
 	int strLength = str.length();
 
-	
+	//Edge cases; checks if root is leaf and
+	//if string is a valid string to decode
 	if (this->root->isLeaf()) {
 		decodedString += this->root->chr;
 		return decodedString;
@@ -140,6 +145,9 @@ std::string huffman_tree::decode(const std::string &string_to_decode) const {
 		return "";
 	}
 
+	//Traverses the tree according to the order of 1's and
+	//0's in the string. Once a leaf is reached, return 
+	//the teaf's character and start at the root again.
 	for (int i = 0; i <= strLength; i++) {
 		if (tempNode->isLeaf()) {
 			decodedString += tempNode->chr;
@@ -153,6 +161,6 @@ std::string huffman_tree::decode(const std::string &string_to_decode) const {
 			tempNode = tempNode->left;
 		}
 	}
-
+	cout << "COMMENTS HAVE BEEN ADDED AND NOTHING WAS BROKEN" << endl;
 	return decodedString;
 }
